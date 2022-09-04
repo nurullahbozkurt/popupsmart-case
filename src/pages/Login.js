@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useApp } from "../states/app";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setLocalUsername } = useApp();
   const [username, setUsername] = useState();
 
-  const submitForm = async (e) => {
+  const submitForm = (e) => {
     e.preventDefault();
-    await localStorage.setItem("username", JSON.stringify(username));
+    localStorage.setItem("username", JSON.stringify(username));
+    setLocalUsername(localStorage.getItem("username"));
     navigate("/app");
   };
   return (

@@ -1,17 +1,17 @@
 import axios from "axios";
-import { Fragment, useEffect } from "react";
+import { format } from "date-fns";
 import { useMutation } from "react-query";
 import { IoClose } from "react-icons/io5";
 import DatePicker from "react-datepicker";
+import { Fragment, useEffect } from "react";
 import { BsFlagFill } from "react-icons/bs";
+import useGetTodos from "../hooks/useGetTodos";
 import "react-datepicker/dist/react-datepicker.css";
 import { Dialog, Transition } from "@headlessui/react";
-import useGetTodos from "../hooks/useGetTodos";
 
+import Loading from "./Loading";
 import { useApp } from "../states/app";
 import CustomDateInput from "./CustomDateInput";
-import Loading from "./Loading";
-import { format } from "date-fns";
 
 const DEFAULT_TODO = {
   title: "",
@@ -25,16 +25,13 @@ const DEFAULT_TODO = {
 const EditTaskModal = ({ task }) => {
   const { refetch } = useGetTodos();
   const {
-    editModalShow,
-    setEditModalShow,
     addTask,
     setAddTask,
+    editModalShow,
     selectTodoDate,
+    setEditModalShow,
     setSelectTodoDate,
   } = useApp();
-
-  console.log("sele", selectTodoDate);
-  console.log("taskd", task);
 
   const onClose = () => {
     setEditModalShow(false);

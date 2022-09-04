@@ -1,14 +1,15 @@
 import React from "react";
-import { TiTick } from "react-icons/ti";
-import { BsFlagFill } from "react-icons/bs";
-import { format } from "date-fns";
-import { FiEdit } from "react-icons/fi";
-import { MdDeleteOutline } from "react-icons/md";
-import { useApp } from "../states/app";
-import { useMutation } from "react-query";
 import axios from "axios";
-import useGetTodos from "../hooks/useGetTodos";
+import { format } from "date-fns";
+import { TiTick } from "react-icons/ti";
+import { FiEdit } from "react-icons/fi";
+import { useMutation } from "react-query";
+import { BsFlagFill } from "react-icons/bs";
+import { MdDeleteOutline } from "react-icons/md";
+
+import { useApp } from "../states/app";
 import Loading from "./Loading";
+import useGetTodos from "../hooks/useGetTodos";
 
 const DEFAULT_TODO = {
   title: "",
@@ -21,13 +22,13 @@ const DEFAULT_TODO = {
 
 const TodoList = ({ task }) => {
   const {
-    setEditModalShow,
-    setEditTask,
-    setAddTask,
     addTask,
-    activeAddTodo,
+    setAddTask,
+    setEditTask,
     setActiveAddTodo,
+    setEditModalShow,
   } = useApp();
+
   const { refetch, isLoading } = useGetTodos();
 
   const editButtonHandler = async (task) => {
@@ -65,6 +66,8 @@ const TodoList = ({ task }) => {
     await requestDeleteTodo.mutateAsync();
     refetch();
   };
+
+  if (isLoading) return <Loading />;
   return (
     <>
       <div className="py-1">
@@ -81,7 +84,7 @@ const TodoList = ({ task }) => {
               </div>
               <p
                 className={`${
-                  task.isCompleted ? "line-through" : ""
+                  task.isCompleted ? "line-through " : ""
                 } font-semibold `}
               >
                 {task.title}

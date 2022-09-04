@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { useApp } from "../states/app";
 
 const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
   const { localUsername } = useApp();
 
-  if (localUsername === null) {
-    return navigate("/");
+  if (!Boolean(localUsername)) {
+    return <Navigate to="/" />;
   }
 
   return children;

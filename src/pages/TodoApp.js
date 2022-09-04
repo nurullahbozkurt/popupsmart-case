@@ -1,20 +1,21 @@
 import axios from "axios";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
 import { HiPlus } from "react-icons/hi";
-import Header from "../components/Header";
 import { useMutation } from "react-query";
 import DatePicker from "react-datepicker";
 import { BsFlagFill } from "react-icons/bs";
-import { GrFormViewHide } from "react-icons/gr";
-import useGetAllTodo from "../hooks/useGetTodos";
-import "react-datepicker/dist/react-datepicker.css";
 import { GrFormView } from "react-icons/gr";
+import { useEffect, useState } from "react";
+import { GrFormViewHide } from "react-icons/gr";
+import "react-datepicker/dist/react-datepicker.css";
 
-import TodoList from "../components/TodoList";
-import CustomDateInput from "../components/CustomDateInput";
-import EditTaskModal from "../components/EditTaskModal";
 import { useApp } from "../states/app";
+import Header from "../components/Header";
+import TodoList from "../components/TodoList";
+import useGetAllTodo from "../hooks/useGetTodos";
+import EditTaskModal from "../components/EditTaskModal";
+import CustomDateInput from "../components/CustomDateInput";
+import Loading from "../components/Loading";
 
 const DEFAULT_TODO = {
   title: "",
@@ -26,23 +27,18 @@ const DEFAULT_TODO = {
 };
 
 const TodoApp = () => {
-  const { data, refetch } = useGetAllTodo();
-
-  console.log("data", data);
+  const { data, refetch, isLoading } = useGetAllTodo();
 
   const {
     editTask,
     addTask,
     setAddTask,
-    selectTodoDate,
-    setSelectTodoDate,
     editModalShow,
-    localUsername,
     activeAddTodo,
+    selectTodoDate,
     setActiveAddTodo,
+    setSelectTodoDate,
   } = useApp();
-
-  console.log("localUserName", localUsername);
 
   const [todayTask, setTodayTask] = useState();
   const [overdueTask, setOverdueTask] = useState();
@@ -95,9 +91,9 @@ const TodoApp = () => {
 
     const completedTodos = data?.filter((item) => item.isCompleted);
 
-    setUpcomingTask(upComingTodos);
     setTodayTask(todayTodos);
     setOverdueTask(overdueTodos);
+    setUpcomingTask(upComingTodos);
     setCompletedTask(completedTodos);
     refetch();
   }, [data]);
@@ -108,6 +104,13 @@ const TodoApp = () => {
       deadline: selectTodoDate,
     });
   }, [selectTodoDate]);
+
+  if (isLoading)
+    return (
+      <>
+        <Loading />
+      </>
+    );
 
   return (
     <div className="font-nunito">
@@ -121,7 +124,7 @@ const TodoApp = () => {
           {!showCompletedTodo && (
             <button
               onClick={viewCompletedTodo}
-              className="flex items-center gap-1.5 text-xl opacity-70"
+              className="flex items-center gap-1.5 text-2xl opacity-70"
             >
               <GrFormViewHide />
               <p className="text-sm">View Completed</p>
@@ -130,7 +133,7 @@ const TodoApp = () => {
           {showCompletedTodo && (
             <button
               onClick={viewCompletedTodo}
-              className="flex items-center gap-1.5 text-xl opacity-70"
+              className="flex items-center gap-1.5 text-2xl opacity-70"
             >
               <GrFormView />
               <p className="text-sm">View Completed</p>
@@ -144,9 +147,11 @@ const TodoApp = () => {
           {overdueTask && overdueTask.map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
-          <div>
-            <h1 className="font-bold text-green-700">Today</h1>
-          </div>
+          {
+            <div>
+              <h1 className="font-bold text-green-700">Today</h1>
+            </div>
+          }
           {todayTask && todayTask.map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
