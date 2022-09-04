@@ -5,23 +5,23 @@ import { useMutation } from "react-query";
 import DatePicker from "react-datepicker";
 import { BsFlagFill } from "react-icons/bs";
 import { GrFormView } from "react-icons/gr";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { GrFormViewHide } from "react-icons/gr";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useApp } from "../states/app";
 import Header from "../components/Header";
+import Loading from "../components/Loading";
 import TodoList from "../components/TodoList";
 import useGetAllTodo from "../hooks/useGetTodos";
 import EditTaskModal from "../components/EditTaskModal";
 import CustomDateInput from "../components/CustomDateInput";
-import Loading from "../components/Loading";
 
 const DEFAULT_TODO = {
   title: "",
   content: "",
   isCompleted: false,
-  priority: { isHigh: false, isMedium: false, isLow: false, isNone: true },
+  priority: "",
   createdAt: new Date(),
   deadline: new Date(),
 };
@@ -40,10 +40,6 @@ const TodoApp = () => {
     setSelectTodoDate,
   } = useApp();
 
-  const [todayTask, setTodayTask] = useState();
-  const [overdueTask, setOverdueTask] = useState();
-  const [upcomingTask, setUpcomingTask] = useState();
-  const [completedTask, setCompletedTask] = useState();
   const [showCompletedTodo, setShowCompletedTodo] = useState(false);
 
   const viewCompletedTodo = () => {
@@ -64,38 +60,38 @@ const TodoApp = () => {
     refetch();
   };
 
-  useEffect(() => {
-    const todayTodos = data?.filter(
+  const todayTodos = useMemo(() => {
+    return data?.filter(
       (item) =>
         format(
           new Date(item.deadline ? item.deadline : item.createdAt),
           "dd/MM/yyyy"
         ) === format(new Date(), "dd/MM/yyyy") && item.isCompleted === false
     );
+  }, [data]);
 
-    const overdueTodos = data?.filter(
+  const overdueTodos = useMemo(() => {
+    return data?.filter(
       (item) =>
         format(
           new Date(item.deadline ? item.deadline : item.createdAt),
           "dd/MM/yyyy"
         ) < format(new Date(), "dd/MM/yyyy") && item.isCompleted === false
     );
+  }, [data]);
 
-    const upComingTodos = data?.filter(
+  const upComingTodos = useMemo(() => {
+    return data?.filter(
       (item) =>
         format(
           new Date(item.deadline ? item.deadline : item.createdAt),
           "dd/MM/yyyy"
         ) > format(new Date(), "dd/MM/yyyy") && item.isCompleted === false
     );
+  }, [data]);
 
-    const completedTodos = data?.filter((item) => item.isCompleted);
-
-    setTodayTask(todayTodos);
-    setOverdueTask(overdueTodos);
-    setUpcomingTask(upComingTodos);
-    setCompletedTask(completedTodos);
-    refetch();
+  const completedTodos = useMemo(() => {
+    data?.filter((item) => item.isCompleted);
   }, [data]);
 
   useEffect(() => {
@@ -144,7 +140,7 @@ const TodoApp = () => {
           <div>
             <h1 className="font-bold text-red-700">Overdue</h1>
           </div>
-          {overdueTask && overdueTask.map((task) => <TodoList task={task} />)}
+          {todayTodos && todayTodos.map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
           {
@@ -152,13 +148,14 @@ const TodoApp = () => {
               <h1 className="font-bold text-green-700">Today</h1>
             </div>
           }
-          {todayTask && todayTask.map((task) => <TodoList task={task} />)}
+          {overdueTodos && overdueTodos.map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
           <div>
             <h1 className="font-bold text-yellow-500">Upcoming</h1>
           </div>
-          {upcomingTask && upcomingTask.map((task) => <TodoList task={task} />)}
+          {upComingTodos &&
+            upComingTodos.map((task) => <TodoList task={task} />)}
         </div>
         <button
           onClick={() => setActiveAddTodo(!activeAddTodo)}
@@ -218,16 +215,11 @@ const TodoApp = () => {
                   onClick={() =>
                     setAddTask({
                       ...addTask,
-                      priority: {
-                        isHigh: true,
-                        isMedium: false,
-                        isLow: false,
-                        isNone: false,
-                      },
+                      priority: "high",
                     })
                   }
                   className={`${
-                    addTask.priority.isHigh
+                    addTask.priority === "high"
                       ? "opacity-100 border-b-[0.5px] border-red-500"
                       : "opacity-30 hover:opacity-100"
                   } text-red-500`}
@@ -238,16 +230,11 @@ const TodoApp = () => {
                   onClick={() =>
                     setAddTask({
                       ...addTask,
-                      priority: {
-                        isHigh: false,
-                        isMedium: true,
-                        isLow: false,
-                        isNone: false,
-                      },
+                      priority: "medium",
                     })
                   }
                   className={`${
-                    addTask.priority.isMedium
+                    addTask.priority === "medium"
                       ? "opacity-100 border-b-[0.5px] border-yellow-500"
                       : "opacity-30 hover:opacity-100"
                   } text-yellow-500`}
@@ -259,16 +246,11 @@ const TodoApp = () => {
                   onClick={() =>
                     setAddTask({
                       ...addTask,
-                      priority: {
-                        isHigh: false,
-                        isMedium: false,
-                        isLow: true,
-                        isNone: false,
-                      },
+                      priority: "low",
                     })
                   }
                   className={`${
-                    addTask.priority.isLow
+                    addTask.priority === "low"
                       ? "opacity-100 border-b-[0.5px] border-blue-500"
                       : "opacity-30 hover:opacity-100"
                   } text-blue-500`}
@@ -279,16 +261,11 @@ const TodoApp = () => {
                   onClick={() =>
                     setAddTask({
                       ...addTask,
-                      priority: {
-                        isHigh: false,
-                        isMedium: false,
-                        isLow: false,
-                        isNone: true,
-                      },
+                      priority: "none",
                     })
                   }
                   className={`${
-                    addTask.priority.isNone
+                    addTask.priority === "none"
                       ? "opacity-100 border-b-[0.5px] border-gray-400"
                       : "opacity-30 hover:opacity-100"
                   } text-gray-400`}
@@ -310,8 +287,8 @@ const TodoApp = () => {
           <div className="mt-10">
             <h1 className="font-bold text-gray-500">Completed Todos</h1>
             <div>
-              {completedTask &&
-                completedTask?.map((task) => <TodoList task={task} />)}
+              {completedTodos &&
+                completedTodos?.map((task) => <TodoList task={task} />)}
             </div>
           </div>
         )}

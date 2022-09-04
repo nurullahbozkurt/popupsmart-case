@@ -13,7 +13,9 @@ const DEFAULT_TODO = {
 };
 
 const AppProvider = ({ children }) => {
-  const [localUsername, setLocalUsername] = useState();
+  const [localUsername, setLocalUsername] = useState(
+    localStorage.getItem("username") || ""
+  );
   const [editModalShow, setEditModalShow] = useState(false);
   const [addTask, setAddTask] = useState(DEFAULT_TODO);
   const [editTask, setEditTask] = useState(false);

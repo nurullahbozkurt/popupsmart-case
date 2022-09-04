@@ -17,7 +17,7 @@ const DEFAULT_TODO = {
   title: "",
   content: "",
   isCompleted: false,
-  priority: { isHigh: false, isMedium: false, isLow: false, isNone: true },
+  priority: "none",
   createdAt: new Date(),
   deadline: new Date(),
 };
@@ -146,16 +146,11 @@ const EditTaskModal = ({ task }) => {
                               onClick={() =>
                                 setAddTask({
                                   ...addTask,
-                                  priority: {
-                                    isHigh: true,
-                                    isMedium: false,
-                                    isLow: false,
-                                    isNone: false,
-                                  },
+                                  priority: "high",
                                 })
                               }
                               className={`${
-                                addTask.priority.isHigh
+                                addTask.priority === "high"
                                   ? "opacity-100 border-b-[0.5px] border-red-500"
                                   : "opacity-30 hover:opacity-100"
                               } text-red-500`}
@@ -166,16 +161,11 @@ const EditTaskModal = ({ task }) => {
                               onClick={() =>
                                 setAddTask({
                                   ...addTask,
-                                  priority: {
-                                    isHigh: false,
-                                    isMedium: true,
-                                    isLow: false,
-                                    isNone: false,
-                                  },
+                                  priority: "medium",
                                 })
                               }
                               className={`${
-                                addTask.priority.isMedium
+                                addTask.priority === "medium"
                                   ? "opacity-100 border-b-[0.5px] border-yellow-500"
                                   : "opacity-30 hover:opacity-100"
                               } text-yellow-500`}
@@ -187,16 +177,11 @@ const EditTaskModal = ({ task }) => {
                               onClick={() =>
                                 setAddTask({
                                   ...addTask,
-                                  priority: {
-                                    isHigh: false,
-                                    isMedium: false,
-                                    isLow: true,
-                                    isNone: false,
-                                  },
+                                  priority: "low",
                                 })
                               }
                               className={`${
-                                addTask.priority.isLow
+                                addTask.priority === "low"
                                   ? "opacity-100 border-b-[0.5px] border-blue-500"
                                   : "opacity-30 hover:opacity-100"
                               } text-blue-500`}
@@ -207,16 +192,11 @@ const EditTaskModal = ({ task }) => {
                               onClick={() =>
                                 setAddTask({
                                   ...addTask,
-                                  priority: {
-                                    isHigh: false,
-                                    isMedium: false,
-                                    isLow: false,
-                                    isNone: true,
-                                  },
+                                  priority: "none",
                                 })
                               }
                               className={`${
-                                addTask.priority.isNone
+                                addTask.priority === "none"
                                   ? "opacity-100 border-b-[0.5px] border-gray-400"
                                   : "opacity-30 hover:opacity-100"
                               } text-gray-400`}

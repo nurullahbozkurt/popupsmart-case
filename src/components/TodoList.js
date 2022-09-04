@@ -21,6 +21,7 @@ const DEFAULT_TODO = {
 };
 
 const TodoList = ({ task }) => {
+  console.log("TASK::", task);
   const {
     addTask,
     setAddTask,
@@ -112,22 +113,22 @@ const TodoList = ({ task }) => {
                 </button>
               )}
 
-              {task.priority.isHigh && (
+              {task.priority === "high" && (
                 <div className="text-red-700">
                   <BsFlagFill />
                 </div>
               )}
-              {task.priority.isMedium && (
+              {task.priority === "medium" && (
                 <div className="text-yellow-500">
                   <BsFlagFill />
                 </div>
               )}
-              {task.priority.isLow && (
+              {task.priority === "low" && (
                 <div className="text-blue-500">
                   <BsFlagFill />
                 </div>
               )}
-              {task.priority.isNone && (
+              {task.priority === "none" && (
                 <div className="text-gray-500">
                   <BsFlagFill />
                 </div>
