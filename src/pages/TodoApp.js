@@ -91,7 +91,7 @@ const TodoApp = () => {
   }, [data]);
 
   const completedTodos = useMemo(() => {
-    data?.filter((item) => item.isCompleted);
+    return data?.filter((item) => item.isCompleted);
   }, [data]);
 
   useEffect(() => {
