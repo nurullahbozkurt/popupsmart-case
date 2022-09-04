@@ -40,6 +40,8 @@ const TodoApp = () => {
     setSelectTodoDate,
   } = useApp();
 
+  console.log("addTask.title", addTask.title);
+
   const [showCompletedTodo, setShowCompletedTodo] = useState(false);
 
   const viewCompletedTodo = () => {
@@ -185,6 +187,7 @@ const TodoApp = () => {
                 onChange={(e) =>
                   setAddTask({ ...addTask, title: e.target.value })
                 }
+                minLength="3"
                 value={addTask.title}
                 className="w-full px-2 outline-none"
                 type="text"
@@ -200,7 +203,7 @@ const TodoApp = () => {
                 />
               </div>
             </div>
-            <input
+            <textarea
               onChange={(e) =>
                 setAddTask({ ...addTask, content: e.target.value })
               }
@@ -275,7 +278,7 @@ const TodoApp = () => {
               </div>
               <button
                 onClick={handleSubmit}
-                disabled={addTask.title === "" ? true : false}
+                disabled={addTask.title === "" || addTask.title.length < 3}
                 className={`text-xs rounded bg-primaryBlue text-white hover:bg-primaryGreen px-3 py-1 disabled:opacity-50`}
               >
                 Add Task
