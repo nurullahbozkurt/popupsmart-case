@@ -72,8 +72,6 @@ const TodoApp = () => {
     );
   }, [data]);
 
-  console.log("todayTodos", todayTodos);
-
   const overdueTodos = useMemo(() => {
     return data?.filter(
       (item) =>
@@ -83,8 +81,6 @@ const TodoApp = () => {
         ) < format(new Date(), "dd/MM/yyyy") && item.isCompleted === false
     );
   }, [data]);
-
-  console.log("overdueTodos", overdueTodos);
 
   const upComingTodos = useMemo(() => {
     return data?.filter(
@@ -126,7 +122,7 @@ const TodoApp = () => {
           {!showCompletedTodo && (
             <button
               onClick={viewCompletedTodo}
-              className="flex items-center gap-1.5 text-2xl opacity-70"
+              className="flex items-center gap-1.5 text-2xl text-gray-600 hover:text-black"
             >
               <GrFormViewHide />
               <p className="text-sm">View Completed</p>

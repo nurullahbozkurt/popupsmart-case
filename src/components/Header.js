@@ -61,7 +61,7 @@ const Header = () => {
                   localUsername?.slice(1)}
               </span>
             </h1>
-            <button onClick={logOut}>
+            <button className="hover:text-yellow-400" onClick={logOut}>
               <ImExit />
             </button>
           </div>
