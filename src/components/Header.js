@@ -48,8 +48,8 @@ const Header = () => {
           <h1>TODO APP</h1>
         </Link>
         <div className="flex items-center gap-3">
-          <div className="text-xs border rounded-full p-2">
-            <p>
+          <div className="text-xs border-2  border-red-600 rounded-full p-2">
+            <p className="text-md">
               <span>{compledetTodoCount.completedCount}</span>/
               <span>{compledetTodoCount.totalCount}</span>
             </p>

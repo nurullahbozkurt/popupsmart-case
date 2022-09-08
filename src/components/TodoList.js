@@ -21,7 +21,6 @@ const DEFAULT_TODO = {
 };
 
 const TodoList = ({ task }) => {
-  console.log("TASK::", task);
   const {
     addTask,
     setAddTask,
@@ -85,8 +84,8 @@ const TodoList = ({ task }) => {
               </div>
               <p
                 className={`${
-                  task.isCompleted ? "line-through " : ""
-                } font-semibold `}
+                  task.isCompleted ? "line-through " : "group-hover:underline "
+                } font-semibold text-sm md:text-base`}
               >
                 {task.title}
               </p>
@@ -135,11 +134,15 @@ const TodoList = ({ task }) => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-between pl-7 text-sm">
+          <div className="flex items-center justify-between pl-7 text-xs md:text-sm">
             <p>{task.content}</p>
             <div>
-              <p>{task.deadline && format(new Date(task.deadline), "PP")}</p>
-              <p>{!task.deadline && format(new Date(task.createdAt), "PP")}</p>
+              <p className="text-center">
+                {task.deadline && format(new Date(task.deadline), "PP")}
+              </p>
+              <p className="text-center">
+                {!task.deadline && format(new Date(task.createdAt), "PP")}
+              </p>
             </div>
           </div>
         </div>

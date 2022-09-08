@@ -75,7 +75,7 @@ const EditTaskModal = ({ task }) => {
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto ">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className="flex min-h-full items-center justify-center p-2 md:p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -85,14 +85,14 @@ const EditTaskModal = ({ task }) => {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform  rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-md transform  rounded-2xl bg-white p-3 md:p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6"
                   >
                     <div className="flex items-center justify-between">
-                      <h1>
-                        Edit Task{" "}
+                      <h1 className="text-md">
+                        Edit Task
                         <span className="text-xs text-gray-500 mx-1">
                           {task?.title}
                         </span>
@@ -107,7 +107,7 @@ const EditTaskModal = ({ task }) => {
                   </Dialog.Title>
                   <div className="mt-2">
                     <div>
-                      <div className="flex flex-col gap-2 border rounded p-2">
+                      <div className="flex flex-col gap-2 border rounded p-1 md:p-2">
                         <div className="flex items-center justify-between">
                           <input
                             onChange={(e) =>

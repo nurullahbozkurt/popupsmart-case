@@ -5,9 +5,11 @@ import { useMutation } from "react-query";
 import DatePicker from "react-datepicker";
 import { BsFlagFill } from "react-icons/bs";
 import { GrFormView } from "react-icons/gr";
-import { useEffect, useState, useMemo } from "react";
 import { GrFormViewHide } from "react-icons/gr";
 import "react-datepicker/dist/react-datepicker.css";
+import { useEffect, useState, useMemo } from "react";
+import { RiErrorWarningFill } from "react-icons/ri";
+import { MdOutlineRunningWithErrors } from "react-icons/md";
 
 import { useApp } from "../states/app";
 import Header from "../components/Header";
@@ -40,8 +42,6 @@ const TodoApp = () => {
     setSelectTodoDate,
   } = useApp();
 
-  console.log("addTask.title", addTask.title);
-
   const [showCompletedTodo, setShowCompletedTodo] = useState(false);
 
   const viewCompletedTodo = () => {
@@ -72,6 +72,8 @@ const TodoApp = () => {
     );
   }, [data]);
 
+  console.log("todayTodos", todayTodos);
+
   const overdueTodos = useMemo(() => {
     return data?.filter(
       (item) =>
@@ -81,6 +83,8 @@ const TodoApp = () => {
         ) < format(new Date(), "dd/MM/yyyy") && item.isCompleted === false
     );
   }, [data]);
+
+  console.log("overdueTodos", overdueTodos);
 
   const upComingTodos = useMemo(() => {
     return data?.filter(
@@ -113,7 +117,7 @@ const TodoApp = () => {
   return (
     <div className="font-nunito">
       <Header />
-      <div className="container mx-auto w-2/3 ">
+      <div className="container mx-auto px-[10px] md:w-2/3 ">
         <div className="flex items-center justify-between mt-10">
           <div className="flex items-center justify-between gap-2">
             <p className="text-2xl">Today</p>
@@ -139,10 +143,15 @@ const TodoApp = () => {
           )}
         </div>
         <div className="my-4">
-          <div>
-            <h1 className="font-bold text-red-700">Overdue</h1>
+          <div className="flex items-center gap-1 text-red-700">
+            <h1 className="font-bold ">Overdue</h1>
+            <RiErrorWarningFill />
           </div>
-          {todayTodos && todayTodos.map((task) => <TodoList task={task} />)}
+          {overdueTodos &&
+            overdueTodos
+              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+              .reverse()
+              .map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
           {
@@ -150,14 +159,22 @@ const TodoApp = () => {
               <h1 className="font-bold text-green-700">Today</h1>
             </div>
           }
-          {overdueTodos && overdueTodos.map((task) => <TodoList task={task} />)}
+          {todayTodos &&
+            todayTodos
+              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+              .reverse()
+              .map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
-          <div>
-            <h1 className="font-bold text-yellow-500">Upcoming</h1>
+          <div className="flex items-center gap-1 text-yellow-500">
+            <h1 className="font-bold ">Upcoming</h1>
+            <MdOutlineRunningWithErrors />
           </div>
           {upComingTodos &&
-            upComingTodos.map((task) => <TodoList task={task} />)}
+            upComingTodos
+              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+              .reverse()
+              .map((task) => <TodoList task={task} />)}
         </div>
         <button
           onClick={() => setActiveAddTodo(!activeAddTodo)}
@@ -181,7 +198,7 @@ const TodoApp = () => {
           </p>
         </button>
         {activeAddTodo && !editModalShow && (
-          <div className="flex flex-col gap-2 border rounded p-2">
+          <div className="flex flex-col gap-2 border rounded p-2 mb-5">
             <div className="flex items-center justify-between">
               <input
                 onChange={(e) =>
@@ -276,13 +293,16 @@ const TodoApp = () => {
                   <BsFlagFill />
                 </button>
               </div>
-              <button
-                onClick={handleSubmit}
-                disabled={addTask.title === "" || addTask.title.length < 3}
-                className={`text-xs rounded bg-primaryBlue text-white hover:bg-primaryGreen px-3 py-1 disabled:opacity-50`}
-              >
-                Add Task
-              </button>
+              <div className="flex items-center gap-3">
+                {requestAddTodo.isLoading && <Loading />}
+                <button
+                  onClick={handleSubmit}
+                  disabled={addTask.title === "" || addTask.title.length < 3}
+                  className={`text-xs rounded bg-primaryBlue text-white hover:bg-primaryGreen px-3 py-1 disabled:opacity-50`}
+                >
+                  Add Task
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -291,7 +311,10 @@ const TodoApp = () => {
             <h1 className="font-bold text-gray-500">Completed Todos</h1>
             <div>
               {completedTodos &&
-                completedTodos?.map((task) => <TodoList task={task} />)}
+                completedTodos
+                  ?.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+                  .reverse()
+                  .map((task) => <TodoList task={task} />)}
             </div>
           </div>
         )}
