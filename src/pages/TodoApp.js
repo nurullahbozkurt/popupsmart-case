@@ -155,8 +155,7 @@ const TodoApp = () => {
           </div>
           {overdueTodos &&
             overdueTodos
-              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
-              .reverse()
+              .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
               .map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
@@ -167,8 +166,7 @@ const TodoApp = () => {
           }
           {todayTodos &&
             todayTodos
-              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
-              .reverse()
+              .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
               .map((task) => <TodoList task={task} />)}
         </div>
         <div className="my-4">
@@ -178,8 +176,7 @@ const TodoApp = () => {
           </div>
           {upComingTodos &&
             upComingTodos
-              .sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
-              .reverse()
+              .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
               .map((task) => <TodoList task={task} />)}
         </div>
         <button
@@ -328,8 +325,7 @@ const TodoApp = () => {
             <div ref={viewCompletedTodoScroll}>
               {completedTodos &&
                 completedTodos
-                  ?.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
-                  .reverse()
+                  ?.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
                   .map((task) => <TodoList task={task} />)}
             </div>
           </div>
