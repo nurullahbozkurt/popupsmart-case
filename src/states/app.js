@@ -1,42 +1,52 @@
+import { useEffect } from "react";
 import { createContext, useContext, useState } from "react";
 
-const AppContext = createContext();
-const useApp = () => useContext(AppContext);
+import { DEFAULT_TODO } from "../statics/DEFAULT_TODO";
 
-const DEFAULT_TODO = {
-  title: "",
-  content: "",
-  isCompleted: false,
-  priority: { isHigh: false, isMedium: false, isLow: false, isNone: true },
-  createdAt: new Date(),
-  deadline: new Date(),
-};
+const AppContext = createContext();
+
+const useApp = () => useContext(AppContext);
 
 const AppProvider = ({ children }) => {
   const [localUsername, setLocalUsername] = useState(
     localStorage.getItem("username") || ""
   );
-  const [editModalShow, setEditModalShow] = useState(false);
+
+  // This state is used to add new todo
   const [addTask, setAddTask] = useState(DEFAULT_TODO);
-  const [editTask, setEditTask] = useState(false);
-  const [selectTodoDate, setSelectTodoDate] = useState(null);
+
+  // This state is used to edit the todo
+  const [editTask, setEditTask] = useState(DEFAULT_TODO);
+
+  // This state is used to turn on add to-do mode
   const [activeAddTodo, setActiveAddTodo] = useState(false);
+
+  // This state is used to turn on edit to-do mode
+  const [editModalShow, setEditModalShow] = useState(false);
+
+  // This state is used to select the todo date
+  const [selectTodoDate, setSelectTodoDate] = useState(null);
+
+  useEffect(() => {
+    const username = JSON.parse(localStorage.getItem("username"));
+    setLocalUsername(username);
+  }, [setLocalUsername, localUsername]);
 
   return (
     <AppContext.Provider
       value={{
-        localUsername,
-        setLocalUsername,
-        editModalShow,
-        setEditModalShow,
-        editTask,
-        setEditTask,
         addTask,
+        editTask,
         setAddTask,
-        selectTodoDate,
-        setSelectTodoDate,
+        setEditTask,
+        localUsername,
+        editModalShow,
         activeAddTodo,
+        selectTodoDate,
+        setEditModalShow,
+        setLocalUsername,
         setActiveAddTodo,
+        setSelectTodoDate,
       }}
     >
       {children}

@@ -8,8 +8,9 @@ import { useApp } from "../states/app";
 import useGetTodos from "../hooks/useGetTodos";
 
 const Header = () => {
-  const { localUsername, setLocalUsername } = useApp();
   const { data } = useGetTodos();
+
+  const { localUsername, setLocalUsername } = useApp();
 
   const [compledetTodoCount, setCompledetTodoCount] = useState({
     totalCount: 0,
@@ -20,11 +21,6 @@ const Header = () => {
     localStorage.removeItem("username");
     setLocalUsername(null);
   };
-
-  useEffect(() => {
-    const username = JSON.parse(localStorage.getItem("username"));
-    setLocalUsername(username);
-  }, [setLocalUsername, localUsername]);
 
   useEffect(() => {
     const completedTodo = data?.filter((todo) => todo.isCompleted === true);

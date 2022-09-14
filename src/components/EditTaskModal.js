@@ -5,25 +5,18 @@ import { IoClose } from "react-icons/io5";
 import DatePicker from "react-datepicker";
 import { Fragment, useEffect } from "react";
 import { BsFlagFill } from "react-icons/bs";
-import useGetTodos from "../hooks/useGetTodos";
 import "react-datepicker/dist/react-datepicker.css";
 import { Dialog, Transition } from "@headlessui/react";
 
 import Loading from "./Loading";
 import { useApp } from "../states/app";
+import useGetTodos from "../hooks/useGetTodos";
 import CustomDateInput from "./CustomDateInput";
-
-const DEFAULT_TODO = {
-  title: "",
-  content: "",
-  isCompleted: false,
-  priority: "none",
-  createdAt: new Date(),
-  deadline: new Date(),
-};
+import { DEFAULT_TODO } from "../statics/DEFAULT_TODO";
 
 const EditTaskModal = ({ task }) => {
   const { refetch } = useGetTodos();
+
   const {
     addTask,
     setAddTask,

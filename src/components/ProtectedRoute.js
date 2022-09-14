@@ -5,7 +5,12 @@ import { useApp } from "../states/app";
 const ProtectedRoute = ({ children }) => {
   const { localUsername } = useApp();
 
-  if (!Boolean(localUsername)) {
+  // The user cannot use the application without logging in.
+  // if localUsername is false, redirect to login page
+  if (
+    !Boolean(localUsername) ||
+    !Boolean(window.localStorage.getItem("username"))
+  ) {
     return <Navigate to="/" />;
   }
 

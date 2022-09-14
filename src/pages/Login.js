@@ -1,14 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { useApp } from "../states/app";
 
 const Login = () => {
   const navigate = useNavigate();
+
   const { setLocalUsername } = useApp();
-  const [username, setUsername] = useState();
+
+  const [username, setUsername] = useState("");
+  const [loginError, setLoginError] = useState(false);
 
   const submitForm = (e) => {
     e.preventDefault();
+    if (username.length < 3) {
+      setLoginError(true);
+      return;
+    }
+    setLoginError(false);
     localStorage.setItem("username", JSON.stringify(username));
     setLocalUsername(localStorage.getItem("username"));
     navigate("/app");
@@ -45,6 +54,11 @@ const Login = () => {
                       Username
                     </label>
                   </div>
+                  {loginError && (
+                    <div className="bg-red-700/80 text-white text-[10px] rounded px-2">
+                      Please enter a valid username
+                    </div>
+                  )}
 
                   <div className="relative space-y-2">
                     <button

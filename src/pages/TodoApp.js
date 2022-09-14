@@ -6,9 +6,9 @@ import DatePicker from "react-datepicker";
 import { BsFlagFill } from "react-icons/bs";
 import { GrFormView } from "react-icons/gr";
 import { GrFormViewHide } from "react-icons/gr";
-import "react-datepicker/dist/react-datepicker.css";
-import { useEffect, useState, useMemo } from "react";
 import { RiErrorWarningFill } from "react-icons/ri";
+import "react-datepicker/dist/react-datepicker.css";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { MdOutlineRunningWithErrors } from "react-icons/md";
 
 import { useApp } from "../states/app";
@@ -16,24 +16,19 @@ import Header from "../components/Header";
 import Loading from "../components/Loading";
 import TodoList from "../components/TodoList";
 import useGetAllTodo from "../hooks/useGetTodos";
+import { DEFAULT_TODO } from "../statics/DEFAULT_TODO";
 import EditTaskModal from "../components/EditTaskModal";
 import CustomDateInput from "../components/CustomDateInput";
 
-const DEFAULT_TODO = {
-  title: "",
-  content: "",
-  isCompleted: false,
-  priority: "",
-  createdAt: new Date(),
-  deadline: new Date(),
-};
-
 const TodoApp = () => {
+  const viewCompletedTodoScroll = useRef();
   const { data, refetch, isLoading } = useGetAllTodo();
 
+  const [addTodoError, setAddTodoError] = useState(false);
+
   const {
-    editTask,
     addTask,
+    editTask,
     setAddTask,
     editModalShow,
     activeAddTodo,
@@ -42,8 +37,8 @@ const TodoApp = () => {
     setSelectTodoDate,
   } = useApp();
 
+  //Show or hide completed todo
   const [showCompletedTodo, setShowCompletedTodo] = useState(false);
-
   const viewCompletedTodo = () => {
     setShowCompletedTodo(!showCompletedTodo);
   };
@@ -56,12 +51,17 @@ const TodoApp = () => {
   });
 
   const handleSubmit = async () => {
+    if (addTask.title.length < 3) {
+      return setAddTodoError(true);
+    }
     await requestAddTodo.mutateAsync();
+    setAddTodoError(false);
     setAddTask(DEFAULT_TODO);
     setSelectTodoDate(null);
     refetch();
   };
 
+  // Filter and list to-do's for today
   const todayTodos = useMemo(() => {
     return data?.filter(
       (item) =>
@@ -72,6 +72,7 @@ const TodoApp = () => {
     );
   }, [data]);
 
+  // Filter and list to-do's for overdue dates
   const overdueTodos = useMemo(() => {
     return data?.filter(
       (item) =>
@@ -82,6 +83,7 @@ const TodoApp = () => {
     );
   }, [data]);
 
+  // Filter and list to-do's for upcoming dates
   const upComingTodos = useMemo(() => {
     return data?.filter(
       (item) =>
@@ -92,6 +94,7 @@ const TodoApp = () => {
     );
   }, [data]);
 
+  // Filter and list completed to-do's
   const completedTodos = useMemo(() => {
     return data?.filter((item) => item.isCompleted);
   }, [data]);
@@ -102,6 +105,13 @@ const TodoApp = () => {
       deadline: selectTodoDate,
     });
   }, [selectTodoDate]);
+
+  // Scroll to Completed Todos
+  useEffect(() => {
+    if (showCompletedTodo) {
+      viewCompletedTodoScroll.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [showCompletedTodo]);
 
   if (isLoading)
     return (
@@ -173,7 +183,11 @@ const TodoApp = () => {
               .map((task) => <TodoList task={task} />)}
         </div>
         <button
-          onClick={() => setActiveAddTodo(!activeAddTodo)}
+          onClick={() => {
+            setActiveAddTodo(!activeAddTodo);
+            setAddTask(DEFAULT_TODO);
+            setAddTodoError(false);
+          }}
           className="flex group items-center gap-2 opacity-80 my-5"
         >
           <div
@@ -195,17 +209,24 @@ const TodoApp = () => {
         </button>
         {activeAddTodo && !editModalShow && (
           <div className="flex flex-col gap-2 border rounded p-2 mb-5">
-            <div className="flex items-center justify-between">
-              <input
-                onChange={(e) =>
-                  setAddTask({ ...addTask, title: e.target.value })
-                }
-                minLength="3"
-                value={addTask.title}
-                className="w-full px-2 outline-none"
-                type="text"
-                placeholder="Title .."
-              />
+            <div className="flex items-start justify-between">
+              <div className="w-full flex flex-col px-2 ">
+                <input
+                  onChange={(e) =>
+                    setAddTask({ ...addTask, title: e.target.value })
+                  }
+                  minLength="3"
+                  value={addTask.title}
+                  className="w-full outline-none"
+                  type="text"
+                  placeholder="Title"
+                />
+                {addTodoError && (
+                  <div className="w-full text-xs text-red-700">
+                    * Enter a title of at least 3 characters
+                  </div>
+                )}
+              </div>
               <div className="pr-3">
                 <DatePicker
                   selected={selectTodoDate}
@@ -293,8 +314,7 @@ const TodoApp = () => {
                 {requestAddTodo.isLoading && <Loading />}
                 <button
                   onClick={handleSubmit}
-                  disabled={addTask.title === "" || addTask.title.length < 3}
-                  className={`text-xs rounded bg-primaryBlue text-white hover:bg-primaryGreen px-3 py-1 disabled:opacity-50`}
+                  className={`text-xs rounded bg-primaryBlue text-white hover:bg-primaryGreen px-3 py-1`}
                 >
                   Add Task
                 </button>
@@ -303,9 +323,9 @@ const TodoApp = () => {
           </div>
         )}
         {showCompletedTodo && (
-          <div className="mt-10">
+          <div className="pb-10">
             <h1 className="font-bold text-gray-500">Completed Todos</h1>
-            <div>
+            <div ref={viewCompletedTodoScroll}>
               {completedTodos &&
                 completedTodos
                   ?.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))

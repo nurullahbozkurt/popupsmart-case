@@ -7,18 +7,10 @@ import { useMutation } from "react-query";
 import { BsFlagFill } from "react-icons/bs";
 import { MdDeleteOutline } from "react-icons/md";
 
-import { useApp } from "../states/app";
 import Loading from "./Loading";
+import { useApp } from "../states/app";
 import useGetTodos from "../hooks/useGetTodos";
-
-const DEFAULT_TODO = {
-  title: "",
-  content: "",
-  isCompleted: false,
-  priority: { isHigh: false, isMedium: false, isLow: false, isNone: true },
-  createdAt: new Date(),
-  deadline: new Date(),
-};
+import { DEFAULT_TODO } from "../statics/DEFAULT_TODO";
 
 const TodoList = ({ task }) => {
   const {
