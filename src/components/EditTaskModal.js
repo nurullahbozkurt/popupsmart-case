@@ -3,9 +3,9 @@ import { format } from "date-fns";
 import { useMutation } from "react-query";
 import { IoClose } from "react-icons/io5";
 import DatePicker from "react-datepicker";
-import { Fragment, useEffect } from "react";
 import { BsFlagFill } from "react-icons/bs";
 import "react-datepicker/dist/react-datepicker.css";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import Loading from "./Loading";
@@ -16,6 +16,7 @@ import { DEFAULT_TODO } from "../statics/DEFAULT_TODO";
 
 const EditTaskModal = ({ task }) => {
   const { refetch } = useGetTodos();
+  const [addTodoError, setAddTodoError] = useState(false);
 
   const {
     addTask,
@@ -29,6 +30,7 @@ const EditTaskModal = ({ task }) => {
   const onClose = () => {
     setEditModalShow(false);
     setAddTask(DEFAULT_TODO);
+    setAddTodoError(false);
   };
 
   const requestEditTodo = useMutation(() => {
@@ -39,6 +41,9 @@ const EditTaskModal = ({ task }) => {
   });
 
   const handleSubmit = async () => {
+    if (addTask.title.trim().length < 3) {
+      return setAddTodoError(true);
+    }
     await requestEditTodo.mutateAsync();
     await refetch();
     onClose();
@@ -102,15 +107,26 @@ const EditTaskModal = ({ task }) => {
                     <div>
                       <div className="flex flex-col gap-2 border rounded p-1 md:p-2">
                         <div className="flex items-center justify-between">
-                          <input
-                            onChange={(e) =>
-                              setAddTask({ ...addTask, title: e.target.value })
-                            }
-                            value={addTask.title}
-                            className="w-full px-2 outline-none"
-                            type="text"
-                            placeholder="Title .."
-                          />
+                          <div className="w-full flex flex-col px-2 ">
+                            <input
+                              onChange={(e) =>
+                                setAddTask({
+                                  ...addTask,
+                                  title: e.target.value,
+                                })
+                              }
+                              minLength="3"
+                              value={addTask.title}
+                              className="w-full outline-none"
+                              type="text"
+                              placeholder="Title"
+                            />
+                            {addTodoError && (
+                              <div className="w-full text-xs text-red-700">
+                                * Enter a title of at least 3 characters
+                              </div>
+                            )}
+                          </div>
                           <div className="pr-3 z-10">
                             <DatePicker
                               selected={selectTodoDate}

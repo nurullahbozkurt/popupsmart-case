@@ -13,7 +13,7 @@ const Login = () => {
 
   const submitForm = (e) => {
     e.preventDefault();
-    if (username.length < 3) {
+    if (username.trim().length < 3) {
       setLoginError(true);
       return;
     }

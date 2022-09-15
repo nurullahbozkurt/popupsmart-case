@@ -51,7 +51,7 @@ const TodoApp = () => {
   });
 
   const handleSubmit = async () => {
-    if (addTask.title.length < 3) {
+    if (addTask.title.trim().length < 3) {
       return setAddTodoError(true);
     }
     await requestAddTodo.mutateAsync();
