@@ -32,6 +32,7 @@ const EditTaskModal = ({ task }) => {
     setEditModalShow(false);
     setAddTask(DEFAULT_TODO);
     setAddTodoError(false);
+    setSelectTodoDate(null);
   };
 
   // This mutation is used to update the todo

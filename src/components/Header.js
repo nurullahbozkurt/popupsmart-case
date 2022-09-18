@@ -44,7 +44,7 @@ const Header = () => {
 
   return (
     <>
-      <div className="w-full dark:bg-slate-900 dark:border-b flex items-center justify-between bg-primaryBlue p-2 px-4 text-white text-lg">
+      <div className="w-full dark:bg-slate-900 dark:border-b flex items-center justify-between bg-primaryBlue p-2 md:px-4 text-white text-lg">
         <Link
           to="/app"
           className="flex items-center gap-2 bg-yellow-500 px-4 rounded font-poiret"

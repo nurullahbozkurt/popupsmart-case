@@ -189,6 +189,7 @@ const TodoApp = () => {
             setActiveAddTodo(!activeAddTodo);
             setAddTask(DEFAULT_TODO);
             setAddTodoError(false);
+            setSelectTodoDate(null);
           }}
           className="flex group items-center gap-2 opacity-80 my-5"
         >
