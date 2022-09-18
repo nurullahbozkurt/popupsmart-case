@@ -27,12 +27,14 @@ const EditTaskModal = ({ task }) => {
     setSelectTodoDate,
   } = useApp();
 
+  // Close modal function
   const onClose = () => {
     setEditModalShow(false);
     setAddTask(DEFAULT_TODO);
     setAddTodoError(false);
   };
 
+  // This mutation is used to update the todo
   const requestEditTodo = useMutation(() => {
     return axios.put(
       `https://63132301b466aa9b03939063.mockapi.io/api/todos/${task?.id}`,

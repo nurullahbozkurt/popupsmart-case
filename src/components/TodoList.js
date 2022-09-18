@@ -23,12 +23,14 @@ const TodoList = ({ task }) => {
 
   const { refetch, isLoading } = useGetTodos();
 
+  // Edit button click function to open edit modal and set edit todo state to current todo
   const editButtonHandler = async (task) => {
     await setEditTask(task);
     setAddTask(task);
     setEditModalShow(true);
   };
 
+  // A request to complete the todo is sent to the server
   const requestComletedTodo = useMutation(() => {
     return axios.put(
       `https://63132301b466aa9b03939063.mockapi.io/api/todos/${task?.id}`,
@@ -36,6 +38,7 @@ const TodoList = ({ task }) => {
     );
   });
 
+  // This function is used to complete the todo
   const handleCompetedTodo = async () => {
     setActiveAddTodo(false);
     await setAddTask({
@@ -48,12 +51,14 @@ const TodoList = ({ task }) => {
     setAddTask(DEFAULT_TODO);
   };
 
+  // A request is sent to the server to delete a to-do
   const requestDeleteTodo = useMutation(() => {
     return axios.delete(
       `https://63132301b466aa9b03939063.mockapi.io/api/todos/${task?.id}`
     );
   });
 
+  // Delete todo function is called when the delete button is clicked on the to-do list
   const deleteTodo = async () => {
     await requestDeleteTodo.mutateAsync();
     refetch();
@@ -91,14 +96,14 @@ const TodoList = ({ task }) => {
               )}
               <button
                 onClick={deleteTodo}
-                className="text-gray-600 hover:text-gray-900 text-xl"
+                className="text-gray-600 hover:text-gray-900 dark:text-slate-300 hover:dark:text-slate-400 text-xl"
               >
                 <MdDeleteOutline />
               </button>
               {!task.isCompleted && (
                 <button
                   onClick={() => editButtonHandler(task)}
-                  className="text-gray-600 hover:text-gray-900"
+                  className="text-gray-600 hover:text-gray-900 dark:text-slate-300 hover:dark:text-slate-400"
                 >
                   <FiEdit />
                 </button>

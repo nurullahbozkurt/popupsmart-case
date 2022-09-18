@@ -8,8 +8,8 @@ import { GrFormView } from "react-icons/gr";
 import { GrFormViewHide } from "react-icons/gr";
 import { RiErrorWarningFill } from "react-icons/ri";
 import "react-datepicker/dist/react-datepicker.css";
-import { useEffect, useState, useMemo, useRef } from "react";
 import { MdOutlineRunningWithErrors } from "react-icons/md";
+import { useEffect, useState, useMemo, useRef } from "react";
 
 import { useApp } from "../states/app";
 import Header from "../components/Header";
@@ -43,6 +43,7 @@ const TodoApp = () => {
     setShowCompletedTodo(!showCompletedTodo);
   };
 
+  // This mutation is used to add the todo
   const requestAddTodo = useMutation(() => {
     return axios.post(
       "https://63132301b466aa9b03939063.mockapi.io/api/todos",
@@ -121,7 +122,7 @@ const TodoApp = () => {
     );
 
   return (
-    <div className="font-nunito">
+    <div className="font-nunito dark:text-slate-300">
       <Header />
       <div className="container mx-auto px-[10px] md:w-2/3 ">
         <div className="flex items-center justify-between mt-10">
@@ -132,18 +133,22 @@ const TodoApp = () => {
           {!showCompletedTodo && (
             <button
               onClick={viewCompletedTodo}
-              className="flex items-center gap-1.5 text-2xl text-gray-600 hover:text-black"
+              className="flex items-center gap-1.5 text-2xl group hover:text-black dark:text-slate-300 dark:hover:text-slate-400"
             >
-              <GrFormViewHide />
+              <p className="dark:rounded-full dark:bg-slate-300 dark:group-hover:bg-slate-400">
+                <GrFormViewHide />
+              </p>
               <p className="text-sm">View Completed</p>
             </button>
           )}
           {showCompletedTodo && (
             <button
               onClick={viewCompletedTodo}
-              className="flex items-center gap-1.5 text-2xl opacity-70"
+              className="flex items-center gap-1.5 text-2xl group hover:text-black dark:text-slate-300 dark:hover:text-slate-400"
             >
-              <GrFormView />
+              <p className="dark:rounded-full dark:bg-slate-300 dark:group-hover:bg-slate-400">
+                <GrFormView />
+              </p>
               <p className="text-sm">View Completed</p>
             </button>
           )}
@@ -156,7 +161,7 @@ const TodoApp = () => {
           {overdueTodos &&
             overdueTodos
               .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-              .map((task) => <TodoList task={task} />)}
+              .map((task) => <TodoList key={task.id} task={task} />)}
         </div>
         <div className="my-4">
           {
@@ -167,7 +172,7 @@ const TodoApp = () => {
           {todayTodos &&
             todayTodos
               .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-              .map((task) => <TodoList task={task} />)}
+              .map((task) => <TodoList key={task.id} task={task} />)}
         </div>
         <div className="my-4">
           <div className="flex items-center gap-1 text-yellow-500">
@@ -177,7 +182,7 @@ const TodoApp = () => {
           {upComingTodos &&
             upComingTodos
               .sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-              .map((task) => <TodoList task={task} />)}
+              .map((task) => <TodoList key={task.id} task={task} />)}
         </div>
         <button
           onClick={() => {
@@ -190,22 +195,22 @@ const TodoApp = () => {
           <div
             className={`${
               activeAddTodo
-                ? "bg-red-700 text-white rounded-full"
-                : "text-red-700"
+                ? "bg-red-700 dark:bg-red-600 text-white rounded-full"
+                : "text-red-700 dark:text-red-600"
             }   p-0.5 group-hover:rounded-full group-hover:text-white group-hover:bg-red-700`}
           >
             <HiPlus />
           </div>
           <p
             className={`${
-              activeAddTodo ? "text-red-700" : ""
-            } group-hover:text-red-700 text-sm`}
+              activeAddTodo ? "text-red-700 dark:text-red-600" : ""
+            } group-hover:text-red-700 dark:group-hover:text-red-600 text-sm`}
           >
             Add task
           </p>
         </button>
         {activeAddTodo && !editModalShow && (
-          <div className="flex flex-col gap-2 border rounded p-2 mb-5">
+          <div className="flex flex-col gap-2 border text-slate-900 bg-white rounded p-2 mb-5">
             <div className="flex items-start justify-between">
               <div className="w-full flex flex-col px-2 ">
                 <input
@@ -320,13 +325,13 @@ const TodoApp = () => {
           </div>
         )}
         {showCompletedTodo && (
-          <div className="pb-10">
+          <div className="mb-10">
             <h1 className="font-bold text-gray-500">Completed Todos</h1>
             <div ref={viewCompletedTodoScroll}>
               {completedTodos &&
                 completedTodos
                   ?.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
-                  .map((task) => <TodoList task={task} />)}
+                  .map((task) => <TodoList key={task.id} task={task} />)}
             </div>
           </div>
         )}

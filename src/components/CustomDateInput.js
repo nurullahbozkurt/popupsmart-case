@@ -13,7 +13,12 @@ const CustomDateInput = React.forwardRef(({ value, onClick }, ref) => (
         TODAY
       </div>
     )}
-    <div role="button" className="text-lg" onClick={onClick} ref={ref}>
+    <div
+      role="button"
+      className="text-slate-900 text-lg"
+      onClick={onClick}
+      ref={ref}
+    >
       <BsFillCalendarCheckFill />
     </div>
   </div>

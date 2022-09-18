@@ -19,6 +19,7 @@ const Login = () => {
     }
     setLoginError(false);
     localStorage.setItem("username", JSON.stringify(username));
+    localStorage.setItem("darkMode", false);
     setLocalUsername(localStorage.getItem("username"));
     navigate("/app");
   };
