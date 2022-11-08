@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 const useGetTodos = () => {
   const { data, isLoading, refetch } = useQuery(["todos"], async () => {
     const { data } = await axios.get(
-      "https://63132301b466aa9b03939063.mockapi.io/api/todos"
+      "https://63131b08a8d3f673ffc4641b.mockapi.io/api/todos"
     );
     return data;
   });
